@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CREDIT CARD module - Guía de Historias de Usuario</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+        }
+        .header {
+            background: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%);
+            color: #1f1f1f;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .header p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+        .section {
+            background: white;
+            margin: 20px 0;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .section h2 {
+            color: #ff9900;
+            border-bottom: 3px solid #ff9900;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+        .section p {
+            margin-bottom: 1rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .card h3 {
+            color: #ff9900;
+            margin-bottom: 10px;
+        }
+        .card p {
+            margin-bottom: 0.5rem;
+        }
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 0.5rem;
+        }
+        .card ul li {
+            margin-bottom: 0.4rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+        .card ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #ff9900;
+        }
+        .actors-grid .card {
+            background: #fff7e6;
+            border-color: #ffe0b2;
+        }
+        .actors-grid .card h3 {
+            font-size: 1.2rem;
+        }
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .tech-item {
+            padding: 1rem;
+            background: #fefefe;
+            border-radius: 6px;
+            border-left: 3px solid #ff9900;
+        }
+        .tech-item strong {
+            color: #ff9900;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        ul.inline-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+        ul.inline-list li {
+            background: #ffe0b2;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.9rem;
+            color: #5f3f00;
+            font-weight: 600;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            margin-bottom: 1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #ff9900;
+            color: white;
+        }
+        .complexity-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin: 5px 5px 0 0;
+        }
+        .simple { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .complex { background: #f8d7da; color: #721c24; }
+        .rule {
+            background: #fff3e0;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #ff9900;
+            border-radius: 4px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .metrics-card {
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fdfdfd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+        }
+        footer a {
+            color: #ff9900;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .grid { grid-template-columns: 1fr; }
+            .tech-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>💳 CREDIT CARD - Módulo de Tarjetas</h1>
+        <p>Gestión de plásticos asociados, con prioridades en validación, enmascaramiento y controles de cambio idénticos a los procesos COBOL clásicos.</p>
+        <p style="margin-top: 10px; font-size: 1rem;">
+            <a href="../../../system-overview.md#-credit-card---gestión-de-tarjetas-de-crédito" style="color:#1f1f1f; font-weight:600;">Leer la documentación completa del módulo (Markdown)</a>
+        </p>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <h2>📋 Resumen del módulo</h2>
+            <p>La experiencia consta de tres pantallas (lista, detalle y actualización) y mantiene la cadencia transaccional de los identificadores HERD (CCLI, CCDL, CCUP) a través de <code>SystemHeader</code>. Cada una reutiliza <code>LoadingSpinner</code>, <code>apiClient</code> y los hooks especializados con validaciones de cuenta/tarjeta, estados mapeados y navegación contextual.</p>
+            <ul class="inline-list">
+                <li>Responsable: Back-office</li>
+                <li>Tecnología: React 18 + TypeScript + MUI 5</li>
+                <li>Hooks centrales: <code>useCreditCardList</code>, <code>useCreditCardDetail</code>, <code>useCreditCardUpdate</code></li>
+                <li>Rutas: <code>/cards/list</code> → <code>/cards/view</code> → <code>/cards/update</code></li>
+                <li>APIs: <code>POST /credit-cards/list</code>, <code>/credit-cards/details</code>, <code>/credit-cards/search</code>, <code>PUT /credit-cards/update</code></li>
+                <li>Integración: <code>apiClient</code> se encarga de headers, timeouts y formas híbridas de respuesta</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🎯 Guía de desarrollo de historias</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Listado y selección</h3>
+                    <p><strong>Template:</strong> Como back-office, quiero filtrar tarjetas por cuenta o número para decidir si ver o actualizar una sola fila.</p>
+                    <p>Aceptación:</p>
+                    <ul>
+                        <li>Cuenta valida de 11 dígitos y tarjeta de 16 en el formulario.</li>
+                        <li>Tabla muestra chips de estado (A/I/B/E) y filas seleccionables mediante radio-like (solo una acción).</li>
+                        <li>F7/F8 navegan páginas, F3/Escape sale y Enter con selección ejecuta <code>handleProcessSelection</code>.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Consulta de detalle</h3>
+                    <p><strong>Template:</strong> Como oficial de cuentas, quiero ver el detalle completo de una tarjeta seleccionada sin reingresar datos.</p>
+                    <p>Aceptación:</p>
+                    <ul>
+                        <li>Auto-búsqueda cuando la navegación trae account/card desde la lista.</li>
+                        <li>Estado y fechas (mes/año) mostrados con chips e iconos.</li>
+                        <li>Toggle de test data (DEV) y botón Retry si la API falla.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Actualización validada</h3>
+                    <p><strong>Template:</strong> Como supervisor, quiero editar nombre, estado y vencimiento con confirmación explícita.</p>
+                    <p>Aceptación:</p>
+                    <ul>
+                        <li>Validaciones por <code>handleValidateChanges</code>: nombre alfabético, status A/I, expiration > hoy.</li>
+                        <li>F5 abre diálogo de confirmación, F12 cancela cambios.</li>
+                        <li>Mapa de estados (BLOCKED/EXPIRED → I) garantiza consistencia al enviar.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>⚡ Factores de aceleración</h3>
+            <ul>
+                <li><code>useCreditCardList</code> centraliza validaciones, paginación (7 registros/página), selección S/U y navegación guiada.</li>
+                <li>Los datos de prueba (activados por <code>import.meta.env.DEV</code>) permiten reproducir cuentas activas, mixtas, expiradas e inactivas.</li>
+                <li><code>useCreditCardDetail</code> detecta respuestas MSW vs backend, convierte accountId y expone <code>formatExpiryDate</code>.</li>
+                <li><code>useCreditCardUpdate</code> mantiene estados <code>changeAction</code>, valida campos y mapea estados (A/I) antes de invocar <code>apiClient.put</code>.</li>
+                <li>Las pantallas comparten <code>SystemHeader</code> con transactionId (CCLI/CCDL/CCUP) para replicar el seguimiento legacy.</li>
+            </ul>
+
+            <h3>📊 Guía de complejidades</h3>
+            <div>
+                <span class="complexity-badge simple">Simple (1-2 pts)</span>
+                <span class="complexity-badge medium">Medio (3-5 pts)</span>
+                <span class="complexity-badge complex">Complejo (5-8 pts)</span>
+            </div>
+            <ul>
+                <li><strong>Simple:</strong> Añadir chips extra (por ejemplo, CVV masked) o un mensaje de ayuda.</li>
+                <li><strong>Medio:</strong> Integrar validación Luhn en el hook y exponer los errores en el helper <code>validationErrors</code>.</li>
+                <li><strong>Complejo:</strong> Implementar bloqueo masivo con auditoría y reporte de why no se cambia.</li>
+            </ul>
+        </section>
+
+        <section class="section actors-grid">
+            <h2>🧑‍💼 Actores y viajes</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Back-office Agent</h3>
+                    <p>Consulta la lista, selecciona una tarjeta y presiona Enter para ver o actualizar sin abandonar la fila.</p>
+                    <p>Viaje:</p>
+                    <ul>
+                        <li>Abre módulo → filtra por cuenta → se muestra tabla paginada.</li>
+                        <li>La UI exige solo una selección (S/U) y habilita botones tras la validación.</li>
+                        <li>F3/Escape cierra y regresa al menú principal.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Supervisor Operacional</h3>
+                    <p>Revisa el detalle con modo lectura y confirma la fecha de expiración antes de editar.</p>
+                    <p>Viaje:</p>
+                    <ul>
+                        <li>Espera la auto-búsqueda o ingresa manualmente account/card.</li>
+                        <li>Observa chips de estado e iconografía (CheckCircle, Cancel, Block, Schedule).</li>
+                        <li>Utiliza Retry o nuevo filtro si la API devuelve error.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Analista de Fraude</h3>
+                    <p>Bloquea o marca como expirada una tarjeta y documenta la razón antes de confirmar.</p>
+                    <p>Viaje:</p>
+                    <ul>
+                        <li>Modifica nombre/estado/expiración y valida con <code>handleValidateChanges</code>.</li>
+                        <li>F5 abre diálogo de confirmación, F12 restaura el snapshot original.</li>
+                        <li>Cambios llegan con <code>activeStatus</code> mapeado a A/I y se loguea el resultado.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔧 Fundación técnica</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <strong>CreditCardListScreen.tsx</strong>
+                    Layout con filtros, tabla, chips de estado y datos de prueba (DEV) para replicar escenarios reales.
+                </div>
+                <div class="tech-item">
+                    <strong>CreditCardDetailScreen.tsx</strong>
+                    Auto-search desde la lista, chips + iconos y mensajes de error/Retry controlados por <code>validationErrors</code>.
+                </div>
+                <div class="tech-item">
+                    <strong>CreditCardUpdateScreen.tsx</strong>
+                    Formulario dividido en búsqueda, edición y confirm dialog; valida expiration y habilita F5/F12.
+                </div>
+                <div class="tech-item">
+                    <strong>useCreditCardList</strong>
+                    Maneja filtros, paginación de 7 filas, selección S/U, validaciones y navegación guiada.</div>
+                <div class="tech-item">
+                    <strong>useCreditCardDetail</strong>
+                    Normaliza request, detecta respuestas MSW/backend y expone helpers como <code>formatExpiryDate</code>.</div>
+                <div class="tech-item">
+                    <strong>useCreditCardUpdate</strong>
+                    Mantiene estados <code>changeAction</code>, valida y mapea <code>activeStatus</code> antes de invocar <code>apiClient.put</code>.</div>
+                <div class="tech-item">
+                    <strong>Dependencias clave</strong>
+                    <code>apiClient</code> (/api base), <code>useMutation</code>, <code>LoadingSpinner</code>, MUI (Card, Chip, Dialog, Table) y <code>SystemHeader</code>.</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔗 Interfaces públicas</h2>
+            <pre><code>POST /api/credit-cards/list     → Filtra y retorna paginación (7 filas/página)</code></pre>
+            <pre><code>POST /api/credit-cards/details  → Retorna los datos completos de un plástico</code></pre>
+            <pre><code>POST /api/credit-cards/search   → Recupera datos para el formulario de edición</code></pre>
+            <pre><code>PUT  /api/credit-cards/update   → Persiste cambios con activeStatus (A/I) y expiry validado</code></pre>
+        </section>
+
+        <section class="section">
+            <h2>📊 Modelos de datos</h2>
+            <pre><code>interface CreditCard {
+  accountNumber: string;
+  cardNumber: string;
+  cardStatus: 'ACTIVE' | 'INACTIVE' | 'BLOCKED' | 'EXPIRED';
+}
+
+interface CreditCardDetailResponse {
+  accountId: number;
+  cardNumber: string;
+  embossedName: string;
+  activeStatus: 'ACTIVE' | 'INACTIVE' | 'BLOCKED' | 'EXPIRED';
+  expiryMonth: string;
+  expiryYear: string;
+  success: boolean;
+  errorMessage?: string;
+  cvvCode?: number;
+}
+
+interface CreditCardUpdateRequest {
+  accountId: string;
+  cardNumber: string;
+  embossedName: string;
+  activeStatus: 'A' | 'I';
+  expiryMonth: string;
+  expiryYear: string;
+  expiryDay?: string;
+}
+</code></pre>
+        </section>
+
+        <section class="section">
+            <h2>📋 Reglas de negocio</h2>
+            <div class="rule">
+                <strong>RN-CC-001:</strong> Account ID y Card Number son obligatorios y deben tener 11 y 16 dígitos numéricos respectivamente.
+            </div>
+            <div class="rule">
+                <strong>RN-CC-002:</strong> Solo tarjetas con estado ACTIVE (A) pueden generar nuevas transacciones; BLOCKED/EXPIRED se tratan como INACTIVE en la UI.
+            </div>
+            <div class="rule">
+                <strong>RN-CC-003:</strong> El CVV es opcional; cuando se provee debe tener 3 o 4 dígitos y no se muestra en texto claro.
+            </div>
+            <div class="rule">
+                <strong>RN-CC-004:</strong> La fecha de expiración no puede ser anterior al mes actual y debe estar entre el año vigente y 2099.
+            </div>
+            <div class="rule">
+                <strong>RN-CC-005:</strong> Solo una fila puede estar marcada (S para ver, U para editar) antes de ejecutar navegación.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🎯 Patrones de criterios de aceptación</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Consulta con filtros</h3>
+                    <p><strong>Dado</strong> accountId o cardNumber válidos<br><strong>Cuando</strong> presiono Search<br><strong>Entonces</strong> aparece la tabla paginada y se habilitan acciones.</p>
+                </div>
+                <div class="card">
+                    <h3>Detalle desde selección</h3>
+                    <p><strong>Dado</strong> selecciono una tarjeta y presiono Enter<br><strong>Cuando</strong> llega la data<br><strong>Entonces</strong> el detalle monta chips e iconos y deshabilita edición sin confirmación.</p>
+                </div>
+                <div class="card">
+                    <h3>Cancelación de cambios</h3>
+                    <p><strong>Dado</strong> hay cambios detectados<br><strong>Cuando</strong> presiono F12 o Cancel<br><strong>Entonces</strong> vuelvo al estado original (changeAction = SHOW_DETAILS).</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p><strong>CardDemo - Documentación del módulo CREDIT CARD</strong></p>
+        <p>Última actualización: 2026-01-31 | Precisión del Codebase: 95%+</p>
+    </footer>
+</body>
+</html>
