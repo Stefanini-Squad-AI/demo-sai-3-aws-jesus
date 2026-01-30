@@ -97,15 +97,15 @@ export default function LoginPage() {
     const errors: Record<string, string> = {};
     
     if (!formData.userId.trim()) {
-      errors.userId = 'Please enter your user ID.';
+      errors.userId = 'Por favor, ingrese su ID de usuario.';
     } else if (formData.userId.length > 8) {
-      errors.userId = 'User ID must be 8 characters or fewer.';
+      errors.userId = 'El ID de usuario debe tener como máximo 8 caracteres.';
     }
 
     if (!formData.password.trim()) {
-      errors.password = 'Please enter your password.';
+      errors.password = 'Por favor, ingrese su contraseña.';
     } else if (formData.password.length > 8) {
-      errors.password = 'Password must be 8 characters or fewer.';
+      errors.password = 'La contraseña debe tener como máximo 8 caracteres.';
     }
     
     setFieldErrors(errors);
@@ -162,10 +162,10 @@ export default function LoginPage() {
 
   const getErrorMessage = (error: string) => {
     const errorMappings: Record<string, string> = {
-      'Invalid credentials': 'Invalid credentials. Please try again.',
-      'User not found': 'User not found. Verify your ID.',
-      'Please check your input': 'Please verify your user ID and password.',
-      'Network error occurred': 'Unable to verify credentials. Check your connection.',
+      'Invalid credentials': 'Credenciales inválidas. Intente nuevamente.',
+      'User not found': 'Usuario no encontrado. Verifique su ID.',
+      'Please check your input': 'Verifique su ID de usuario y contraseña.',
+      'Network error occurred': 'No se pueden verificar las credenciales. Revise su conexión.',
     };
 
     return errorMappings[error] || error;
@@ -195,8 +195,8 @@ export default function LoginPage() {
           <SystemHeader
             transactionId="CC00"
             programName="COSGN00C"
-            title="CardDemo - Card Demo Application"
-            subtitle="Mainframe Modernization"
+            title="CardDemo - Aplicación de demostración de tarjetas"
+            subtitle="Modernización del mainframe"
             showNavigation={false}
           />
           
@@ -296,7 +296,7 @@ export default function LoginPage() {
               gutterBottom
               sx={{ mb: 3 }}
             >
-              Enter your user ID and password, then click SIGN IN.
+              Ingrese su ID de usuario y contraseña y luego presione INICIAR SESIÓN.
             </Typography>
 
             <Box
@@ -306,11 +306,11 @@ export default function LoginPage() {
             >
               <Stack spacing={3}>
                 <TextField
-                  label="User ID"
+                  label="ID de usuario"
                   value={formData.userId}
                   onChange={handleInputChange('userId')}
                   error={!!fieldErrors.userId}
-                  helperText={fieldErrors.userId || '(Max 8 characters)'}
+                  helperText={fieldErrors.userId || 'Máximo 8 caracteres'}
                   disabled={isLoading}
                   autoFocus
                   inputProps={{
@@ -332,12 +332,12 @@ export default function LoginPage() {
                 />
 
                 <TextField
-                  label="Password"
+                  label="Contraseña"
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={handleInputChange('password')}
                   error={!!fieldErrors.password}
-                  helperText={fieldErrors.password || '(Max 8 characters)'}
+                  helperText={fieldErrors.password || 'Máximo 8 caracteres'}
                   disabled={isLoading}
                   autoComplete="current-password"
                   inputProps={{
@@ -377,14 +377,14 @@ export default function LoginPage() {
                         onClose={handleAlertClose}
                         sx={{ borderRadius: 2 }}
                       >
-                        {getErrorMessage(authError)}
+                      {getErrorMessage(authError)}
                       </Alert>
                     ) : (
                       <Alert
                         severity="error"
                         sx={{ borderRadius: 2 }}
                       >
-                        Please correct the errors above.
+                        Corrija los errores arriba.
                       </Alert>
                     )}
                   </>
@@ -417,7 +417,7 @@ export default function LoginPage() {
                     },
                   }}
               >
-                {isLoading ? 'Signing in...' : 'SIGN IN'}
+                {isLoading ? 'Iniciando sesión...' : 'INICIAR SESIÓN'}
               </Button>
               </Stack>
             </Box>
@@ -426,7 +426,7 @@ export default function LoginPage() {
 
             <Box sx={{ textAlign: 'center' }}>
               <Typography variant="body2" color="text.secondary" gutterBottom>
-                Sample credentials:
+                Credenciales de ejemplo:
               </Typography>
               <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap">
                 <Typography variant="caption" sx={{ 
@@ -436,7 +436,7 @@ export default function LoginPage() {
                   py: 0.5,
                   borderRadius: 1,
                 }}>
-                  Administrator: ADMIN001 / PASSWORD
+                  Administrador: ADMIN001 / PASSWORD
                 </Typography>
                 <Typography variant="caption" sx={{ 
                   bgcolor: 'success.main', 
@@ -445,7 +445,7 @@ export default function LoginPage() {
                   py: 0.5,
                   borderRadius: 1,
                 }}>
-                  Administrative office: USER001 / PASSWORD
+                  Oficina administrativa: USER001 / PASSWORD
                 </Typography>
               </Stack>
             </Box>
@@ -460,7 +460,7 @@ export default function LoginPage() {
             }}
           >
             <Typography variant="body2" color="text.secondary">
-              SIGN IN • Press F3 to exit
+              INICIAR SESIÓN • Presione F3 para salir
             </Typography>
           </Box>
         </Paper>
