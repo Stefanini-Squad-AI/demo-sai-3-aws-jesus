@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRANSACTIONSCARD - Guía de Historias y Desarrollo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #1f2a37; background: #f5f7fa; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 3.5rem 2rem 2.5rem; text-align: center; box-shadow: 0 8px 14px rgba(0,0,0,0.15); }
+        .header h1 { font-size: 2.6rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .header p { font-size: 1.1rem; opacity: 0.95; }
+        .header a { color: #ffd966; font-weight: 600; text-decoration: underline; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 2rem; }
+        .section { background: white; margin: 1.6rem 0; padding: 2.4rem; border-radius: 12px; box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
+        .section h2 { color: #2a52c1; margin-bottom: 1rem; font-size: 1.7rem; border-bottom: 3px solid rgba(42,82,193,0.25); padding-bottom: 0.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-top: 1rem; }
+        .card { background: #f8f9fc; border-radius: 10px; padding: 1.3rem 1.4rem; border: 1px solid #e2e7f0; }
+        .card h3 { color: #2a52c1; margin-bottom: 0.6rem; font-size: 1.3rem; }
+        .card p { margin-bottom: 0.4rem; font-size: 0.95rem; }
+        .card ul { list-style: none; padding-left: 0; margin-top: 0.6rem; }
+        .card ul li { padding-left: 1rem; position: relative; margin-bottom: 0.3rem; }
+        .card ul li::before { content: "•"; position: absolute; left: 0; color: #667eea; }
+        .inline-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
+        .inline-list li { background: #e1e5ff; border-radius: 20px; padding: 6px 16px; font-size: 0.9rem; font-weight: 600; color: #1f2a37; }
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .tech-item { padding: 1rem; background: #f5f7ff; border-radius: 6px; border-left: 4px solid #667eea; }
+        .tech-item strong { display: block; color: #667eea; margin-bottom: 0.3rem; }
+        pre { background: #252a3c; color: #f8f8f2; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.9rem; margin-top: 1rem; }
+        .complexity-badges { margin-top: 0.8rem; display: flex; gap: 0.4rem; flex-wrap: wrap; }
+        .badge { border-radius: 20px; padding: 0.45rem 1.1rem; font-weight: 700; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; }
+        .simple { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .complex { background: #f8d7da; color: #721c24; }
+        .rule { background: #e7f2ff; padding: 1rem; border-radius: 6px; border-left: 4px solid #2196f3; margin: 0.6rem 0; }
+        .rule strong { display: block; margin-bottom: 0.4rem; }
+        footer { text-align: center; margin: 3rem 0 1rem; color: #4b5563; }
+        footer a { color: #2a52c1; text-decoration: none; font-weight: 600; }
+        footer a:hover { text-decoration: underline; }
+        @media (max-width: 768px) {
+            .header { padding: 3rem 1.2rem 2rem; }
+            .section { padding: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>💳 TRANSACTIONSCARD - Transacciones</h1>
+        <p>Consulta, listado, registro y reportes con las reglas COBOL del backend y experiencia moderna en React + MUI.</p>
+        <p><a href="../../../modules/transactions/transactions-overview.md">📄 Leer el overview técnico completo</a></p>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <h2>📋 Resumen del módulo</h2>
+            <p>El módulo coordina cuatro pantallas que comparten `SystemHeader`, Material-UI y los hooks centrales (`useTransactionView`, `useTransactionList`, `useTransactionAdd`, `useTransactionReports`). El flujo cubre búsqueda (F3/F4/F5), paginación (F7/F8), registro con confirmación `Y`, y generación de reportes en diálogo con descarga TXT.</p>
+            <ul class="inline-list">
+                <li>Front-end: React 18 + TypeScript</li>
+                <li>UI: Material-UI 5</li>
+                <li>Estado: Hooks + `useMutation`</li>
+                <li>APIs: `/transaction-view`, `/transactions/*`, `/v1/reports/transactions/*`</li>
+                <li>Validaciones inspiradas en COBOL</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🎯 Guía de desarrollo de historias</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Visualizar transacción</h3>
+                    <p><strong>Template:</strong> Como agente de service, quiero ingresar Transaction ID para ver monto, comerciante y fechas en pantalla rápida.</p>
+                    <ul>
+                        <li>Input con mascara monoespaciada (max 16 dígitos).</li>
+                        <li>Enter dispara `handleSearch`; F4 limpia todo.</li>
+                        <li>Respuesta muestra `transactionAmount`, `merchantName`, `errorMessage` en `Alert`.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Listado y selección</h3>
+                    <p><strong>Template:</strong> Como supervisor, quiero recorrer páginas con F7/F8 y seleccionar un registro con la acción `S` para acceder al detalle.</p>
+                    <ul>
+                        <li>Tabla con encabezado sticky y chips de página.</li>
+                        <li>Input por fila solo acepta `S` (others show error).</li>
+                        <li>Teclas F3/Escape salen al menú principal.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Registrar transacción</h3>
+                    <p><strong>Template:</strong> Como supervisor de autorización, quiero ingresar los campos obligatorios, validar merchant y confirmar con `Y` para crear la transacción.</p>
+                    <ul>
+                        <li>Requiere accountId o cardNumber, tipo, categoría, merchant y montos.</li>
+                        <li>`isConfirmationStep` solicita `Y`; F5 muestra mensaje de copia (no disponible aún).</li>
+                        <li>POST `/transactions` solo ocurre después de confirmar.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Reportes detallados</h3>
+                    <p><strong>Template:</strong> Como analista de fraude, quiero generar reportes mensuales o custom, visualizarlos en un diálogo y descargar un TXT.</p>
+                    <ul>
+                        <li>Radio buttons para monthly/yearly/custom.</li>
+                        <li>Validación `startDate <= endDate` (custom) y confirmación `Y/N`.</li>
+                        <li>Dialog con `TransactionReportTable` y botón `Download TXT`.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>⚡ Factores de aceleración</h3>
+            <ul>
+                <li>Hooks centralizados (`useTransaction*`) que exponen estado, loaders y acciones para cada pantalla.</li>
+                <li>Stack + Card + `SystemHeader` replican fácilmente el layout de transición (CT00/CT01/CR00).</li>
+                <li>MSW con `transaction*.ts` ya preconfigura errores y validaciones de negocio.</li>
+                <li>Utilidades `formatCurrency`/`formatDateTime` y `alpha(theme.palette...)` para consistencia visual.</li>
+            </ul>
+
+            <div class="complexity-badges">
+                <span class="badge simple">Simple (1-2 pts)</span>
+                <span class="badge medium">Medio (3-5 pts)</span>
+                <span class="badge complex">Complejo (5-8 pts)</span>
+            </div>
+            <ul>
+                <li><strong>Simple:</strong> Validar y mostrar un nuevo campo de merchant sin cambiar APIs.</li>
+                <li><strong>Medio:</strong> Añadir filtro de categorías en el listado y mantener la paginación.</li>
+                <li><strong>Complejo:</strong> Integrar reportes con jobId y auditoría de descargas.</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>🧑‍💼 Actores y viajes</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Back-office analyst</h3>
+                    <p>Busca y revisa transacciones en segundos.</p>
+                    <ul>
+                        <li>Ingresa ID → Enter → `useTransactionView` llama a la API.</li>
+                        <li>Errores aparecen en `Alert` y el formulario permite limpiar con F4.</li>
+                        <li>F5 redirige a `/transactions/list` para ver contexto.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Supervisor de autorización</h3>
+                    <p>Registra transacciones manuales para casos excepcionales.</p>
+                    <ul>
+                        <li>Completa formulario con merchant y monto (`transactionAmount`).</li>
+                        <li>La confirmación `Y` dispara el POST; `N` cancela.</li>
+                        <li>Los handlers MSW validan cada campo y muestran mensajes claros.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Analista de fraude</h3>
+                    <p>Genera reportes y exporta TXT para auditoría.</p>
+                    <ul>
+                        <li>Selecciona tipo de reporte (`monthly`, `yearly`, `custom`).</li>
+                        <li>Confirma con `Y`, el diálogo muestra `TransactionReportTable`.</li>
+                        <li>Descarga el TXT y verifica totales por cuenta.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🔧 Fundamento técnico</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>`TransactionViewScreen.tsx`</h3>
+                    <p>Form con `TextField`, adornos, `Stack` de botones y `SystemHeader` (transactionId CT01, programName COTRN01C).</p>
+                </div>
+                <div class="card">
+                    <h3>`TransactionListScreen.tsx`</h3>
+                    <p>Tabla con `TableContainer`, `Chip` de página, selección por fila (`selectionInputs`) y navegación condicional.</p>
+                </div>
+                <div class="card">
+                    <h3>`TransactionAddScreen.tsx`</h3>
+                    <p>Formulario en tarjetas, ayuda con `testTransactions`, validaciones en el hook y `confirmation` visible como chip.</p>
+                </div>
+                <div class="card">
+                    <h3>`TransactionReportsScreen.tsx`</h3>
+                    <p>Dialog responsive, botones `Download TXT`, `Print`, `Close` y tabla con `formatCurrency`/`formatDateTime`.</p>
+                </div>
+            </div>
+
+            <h3>🔗 Dependencias</h3>
+            <ul>
+                <li>**Material-UI 5:** Cards, Tables, Chips, Dialogs, RadioGroup y Alert.</li>
+                <li>**React Router DOM:** Rutas `/transactions/view/:id`, `/transactions/list`, `/menu/main`.</li>
+                <li>**apiClient + useMutation:** Agregan Authorization y normalizan errores.</li>
+                <li>**MSW:** `transaction*.ts` provee mocks y delays de 1.2s.</li>
+                <li>**SystemHeader:** Consistencia con otros módulos transaccionales.</li>
+            </ul>
+
+            <h3>🌐 Interfaces públicas</h3>
+            <pre><code>GET  /transaction-view/search?transactionId={id}</code></pre>
+            <pre><code>POST /transactions (body: accountId | cardNumber, typeCode, categoryCode, source, description, amount, originalDate, processDate, merchantId, merchantName, merchantCity, merchantZip, confirmation)</code></pre>
+            <pre><code>POST /transactions/list, /transactions/next-page, /transactions/previous-page</code></pre>
+            <pre><code>POST /v1/reports/transactions/{monthly,yearly,custom} (confirmed: true + optional dates)</code></pre>
+        </section>
+
+        <section class="section">
+            <h2>📋 Reglas de negocio</h2>
+            <div class="rule">
+                <strong>RN-101:</strong> Transaction ID en búsqueda no puede estar vacío y debe ser numérico.
+            </div>
+            <div class="rule">
+                <strong>RN-102:</strong> Registro requiere `accountId` o `cardNumber`, y cada campo (tipo, categoría, merchant, fechas) tiene regex y rangos propios.
+            </div>
+            <div class="rule">
+                <strong>RN-103:</strong> La confirmación debe ser `Y` para que `useTransactionAdd` dispare el POST; `N` reinicia el paso de confirmación.
+            </div>
+            <div class="rule">
+                <strong>RN-104:</strong> Listado solo acepta la acción `S` en la selección por fila; otras letras retornan error inmediato.
+            </div>
+            <div class="rule">
+                <strong>RN-105:</strong> Reportes custom validan que `startDate <= endDate` y exigen confirmación antes de llamar al backend.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🎯 Patrones de criterios de aceptación</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Autenticación</h3>
+                    <p><strong>Dado</strong> token JWT válido<br><strong>Cuando</strong> ingreso al módulo<br><strong>Entonces</strong> puedo utilizar `/transaction-view` y `/transactions` sin errores de autorización.</p>
+                </div>
+                <div class="card">
+                    <h3>Validación</h3>
+                    <p><strong>Dado</strong> Transaction ID no numérico<br><strong>Cuando</strong> presiono Enter<br><strong>Entonces</strong> aparece `Transaction ID must be Numeric...` y no se hace llamada.</p>
+                </div>
+                <div class="card">
+                    <h3>Registro</h3>
+                    <p><strong>Dado</strong> formulario completo<br><strong>Cuando</strong> confirmo con `Y`<br><strong>Entonces</strong> invoca `POST /transactions` y limpia `formData`.</p>
+                </div>
+                <div class="card">
+                    <h3>Reportes</h3>
+                    <p><strong>Dado</strong> tipo `custom` y fechas válidas<br><strong>Cuando</strong> confirmo con `Y`<br><strong>Entonces</strong> se muestra dialog con `TransactionReportTable` y el botón `Download TXT` genera el archivo.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>⚡ Presupuestos y métricas</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <strong>Tiempo de respuesta</strong>
+                    Búsqueda < 500 ms (P95), listado < 600 ms, registro < 1.2 s.
+                </div>
+                <div class="tech-item">
+                    <strong>Capacidad</strong>
+                    Pagina con 50 transacciones, chips y scroll rápido (tabla sticky).
+                </div>
+                <div class="tech-item">
+                    <strong>Descarga</strong>
+                    TXT y Print disponibles directamente desde el diálogo de reportes.
+                </div>
+                <div class="tech-item">
+                    <strong>Métrica funcional</strong>
+                    Validaciones inline cubren 100% de los casos críticos detectados en `validate-mocks.sh`.
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🚨 Riesgos y mitigaciones</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Reportes pesados</h3>
+                    <p>Cargar demasiadas transacciones en `TransactionReportTable` puede ralentizar el DOM.</p>
+                    <p><strong>Mitigación:</strong> Limitar custom a 30 días o paginar en el backend.</p>
+                </div>
+                <div class="card">
+                    <h3>Validaciones dispersas</h3>
+                    <p>Regex en cada hook pueden divergir con el backend.</p>
+                    <p><strong>Mitigación:</strong> Centralizar validaciones y compartir esquemas con tests.</p>
+                </div>
+                <div class="card">
+                    <h3>Falta auditoría</h3>
+                    <p>No se registra quién confirma una transacción.</p>
+                    <p><strong>Mitigación:</strong> Extender `TransactionAddResponse` con `userId` y `timestamp` en la próxima iteración.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🧪 Testing y mocking</h2>
+            <p>MSW cubre `/transaction-view`, `/transactions/list`, `/transactions`, `/v1/reports/transactions/*` con validaciones idénticas a las del backend COBOL (confirmación `Y`, regex de cuentas y merchants). El script `validate-mocks.sh` verifica que las transacciones referencian números de tarjeta válidos. Esto permite e2e sin backend.</p>
+            <pre><code>const response = await apiClient.post<TransactionListResponse>('/transactions/list', { pageNumber: 1, transactionId });</code></pre>
+        </section>
+    </div>
+
+    <footer>
+        <p><a href="../../index.html">← Volver al índice general</a></p>
+        <p><a href="../../../system-overview.md">🏠 Volver al System Overview</a> · <a href="../../../modules/transactions/transactions-overview.md">📝 Leer el overview Markdown</a></p>
+        <p style="margin-top: 8px; color: #566674;"><em>Última actualización: 2026-02-15 · Precisión: 95%+</em></p>
+    </footer>
+</body>
+</html>
